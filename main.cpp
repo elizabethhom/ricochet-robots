@@ -1,13 +1,13 @@
-/********************************************
-* Comp 15 - Fall 2019
-* Project 1
-* ELIZABETH HOM
-* 23 OCT 2019
-* 
-* main.cpp
-*
-* Interactive main for running gorobots
-*********************************************/
+  
+/*
+ * main.cpp
+ * 
+ * COMP15 - FALL2019
+ * Elizabeth Hom (ehom01)
+ * Last Modified: October 23, 2019
+ * 
+ * Purpose: Main driver of the game's two modes.
+ */
 
 #include <iostream>
 #include <fstream>
@@ -18,7 +18,7 @@
 using namespace std;
 
 string getInput(Board *myBoard);
-void getCommands(Board *myBoard);
+void   getCommands(Board *myBoard);
 
 int main(int argc, char *argv[])
 {
@@ -30,25 +30,31 @@ int main(int argc, char *argv[])
         myBoard->fillBoard(boardFile);
 
         mode = getInput(myBoard);
-        if (mode == "AUTO") {           // automatic mode
+        
+        // Automatic mode
+        if (mode == "AUTO") {
             Tree myTree(*myBoard);
-        } else if (mode == "INTER") {   // interactive mode
+        } else if (mode == "INTER") {
+          // Interactive mode
             myBoard->printBoard();
             getCommands(myBoard);
         }
     } else
-        cout << "Usage: ./gorobots [board input file]" << endl;
+        cout << "Usage: ./gorobots [boardFile]" << endl;
 
     delete myBoard;
     return 0;
 }
 
-// function getInput
-// parameters: the game board
-// returns: the game mode the user would like to play (string)
-// does: prints messages to terminal and gets user input for robot symbol, row,
-//       col, and their preferred game mode (AUTO or INTER). then places robot
-//       onto board using user's specified location and symbol
+/*
+ *  getInput()
+ *
+ *  Parameters: Game board
+ *  Does:       Prompts user input for robot symbol, starting row/col, and
+ *              preferred game mode (AUTO or INTER). Places robot accordingly to
+ *              user's input.
+ *  Returns:    User's preferred game mode 
+ */
 string getInput(Board *myBoard)
 {
     int row, col;
@@ -71,16 +77,19 @@ string getInput(Board *myBoard)
     return mode;
 }
 
-// function getCommands
-// parameters: the game board
-// returns: none
-// does: if the user selects interactive mode, getCommands contiuously gets
-//       commands to control the robot from the user until the user wins or the
-//       user quits
+/*
+ *  getCommands()
+ *
+ *  Parameters: Game board
+ *  Does:       If user selects interactive mode, continuously prompts user for
+ *              directional commands to control robot until user wins or quits
+ *  Returns:    NA
+ */
 void getCommands(Board *myBoard)
 {
     char command;
 
+    // Prompts for commands until winning conditions are met or user quits
     do {
         cin >> command;
         if (command == 'q') {
@@ -101,5 +110,5 @@ void getCommands(Board *myBoard)
         } else {
             cout << "move: " << command << "INVALID MOVE" << endl;
         }
-    } while (myBoard->getYouWin() == false);    // gets commands until winning
-}                                               // conditions are met
+    } while (myBoard->getYouWin() == false);
+}
