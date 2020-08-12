@@ -1,14 +1,12 @@
-/********************************************
-* Comp 15 - Fall 2019
-* Project 1
-* ELIZABETH HOM
-* 23 OCT 2019
-* 
-* Tree.h
-*
-* Tree interface
-* Class interface for the Tree Class
-*********************************************/
+/*
+ * Tree.h
+ * 
+ * COMP15 - FALL2019
+ * Elizabeth Hom (ehom01)
+ * Last Modified: October 23, 2019
+ * 
+ * Purpose: Interface for Tree class.
+ */
 
 #include <iostream>
 
@@ -22,25 +20,24 @@ using namespace std;
 class Tree
 {
     public:
-        // parametrized constructor
+
         Tree(Board inputBoard);
-
-        // destructor
         ~Tree();
-
-        // calls private autoSolve, searches tree for solution
-        bool autoSolve(char target);
-
-        // copy constructor
         Tree(const Tree &t);
-
-        // assignment operator
         Tree& operator=(const Tree &t);
 
+        // Searches for game solution in automatic mode
+        bool autoSolve(char target);
+
     private:
-        // Tree node struct, contains path to reach node, row, col index of
-        // robot at that node, board character at that node, pointers to all
-        // four directions
+
+        /*
+        * Node
+        *
+        * Describes a node in the tree by the robot's possible path combinations,
+        * row/col indices, character located there, and pointers to nodes in all
+        * four directions.
+        */
         struct Node {
             string path;
             int row, col;
@@ -48,25 +45,25 @@ class Tree
             Node *north, *east, *south, *west;
         };
 
-        // pointer to root of tree
+        // Pointer to root of tree
         Node *root;
 
-        // builds the tree recursively
+        // Builds tree recursively
         Node *makeTree(int height, string currPath, int rowInd, int colInd);
 
-        // copies the tree, necessary for copy constructor
+        // Copies tree, necessary for copy constructor
         Node *copy(Node *toCopy);
 
-        // board from Board class
+        // Board from Board class
         Board myBoard;
 
-        // attempts to find a solution to the game
+        // Attempts to find solution to the game
         bool autoSolve(char target, Node *curr);
 
-        // deletes the tree
+        // Deletes tree
         void destroy(Node *curr);
 
-        // constant for maxLength of tree (7 moves)
+        // maxLength of tree = 7 moves
         static const int maxLength = 7;
 };
 
