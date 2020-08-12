@@ -1,13 +1,15 @@
-/********************************************
-* Comp 15 - Fall 2019
-* Project 1
-* ELIZABETH HOM
-* 23 OCT 2019
-* 
-* Tree.cpp
-*
-* Tree implementation
-*********************************************/
+  
+/*
+ * Tree.cpp
+ * 
+ * COMP15 - FALL2019
+ * Elizabeth Hom (ehom01)
+ * Last Modified: October 23, 2019
+ * 
+ * Purpose: Implementation of the Tree class. Oversees building of tree that
+ *          models all possible paths of robot from its starting position,
+ *          and automated searching tree for solution.
+ */
 
 #include <iostream>
 
@@ -16,10 +18,13 @@
 
 using namespace std;
 
-// constructor
-// parameters: game board
-// does: passes in the game board from Board class, makes the tree of possible
-//       moves the robot can take from starting position, solves game
+/*
+ * Constructor
+ *
+ * Parameters: Game board
+ * Does:       Makes tree of possible moves robot can take from starting position
+ *             and attempts to auto-solve game
+ */
 Tree::Tree(Board inputBoard)
 {
     myBoard = inputBoard;
@@ -29,20 +34,27 @@ Tree::Tree(Board inputBoard)
         cout << "No solution" << endl;
 }
 
-// destructor
-// parameters: none
-// does: calls destroy(), deletes the tree
+/*
+ * Destructor
+ *
+ * Does:       Destroys associated memory of tree
+ */
 Tree::~Tree()
 {
     destroy(root);
 }
 
-// function destroy
-// parameters: a Node
-// does: deletes the tree
+/*
+ * destroy
+ *
+ * Parameters: A tree Node
+ * Returns:    NA
+ * Does:       Recursively deletes tree in all directions
+ */
 void Tree::destroy(Node *curr)
 {
-    if (curr->north != nullptr)     // deletes the children
+    // Deletes children
+    if (curr->north != nullptr)
         destroy(curr->north);
     if (curr->east != nullptr)
         destroy(curr->east);
@@ -51,18 +63,24 @@ void Tree::destroy(Node *curr)
     if (curr->west != nullptr)
         destroy(curr->west);
 
-    delete curr;                    // deletes the root
+    // Deletes root
+    delete curr;
 }
 
-// function makeTree
-// parameters: current height, current path, row, col index of robot
-// does: recursively creates the tree of possible paths the robot could take
-//       from its starting position. with each recursive call, if the robot can
-//       move in a direction (N, S, W, E), adds a node that contains the height
-//       of tree and current path at that point, and row, col index of robot
+/*
+ * makeTree
+ *
+ * Parameters: Current tree height, path, robot row/col indices
+ * Returns:    Current pointer to tree node
+ * Does:       Recursively creates tree of possible paths robot can take from
+ *             starting position. With each recursive call, if robot can move in
+ *             a direction (N, S, W, E), adds Node that contains height of tree,
+ *             current path, and robot's row/col indices
+ */
 Tree::Node* Tree::makeTree(int height, string currPath, int rowInd, int colInd)
 {
-    if (height == maxLength + 1)    // if seven moves have passed, return
+    // If seven moves have passed, return
+    if (height == maxLength + 1)
         return nullptr;
 
     Node *curr = new Node;
@@ -70,7 +88,8 @@ Tree::Node* Tree::makeTree(int height, string currPath, int rowInd, int colInd)
     curr->col = colInd;
     curr->boardChar = myBoard.getBoardChar(rowInd, colInd);
 
-    if (myBoard.canMoveNorth(rowInd, colInd)) {              // recursive call
+    // Recursive call in all directions
+    if (myBoard.canMoveNorth(rowInd, colInd)) {
         curr->north = makeTree(height + 1, currPath + "N -> ",
                       myBoard.mvNGetPos(rowInd, colInd), colInd);
     } else
@@ -91,35 +110,49 @@ Tree::Node* Tree::makeTree(int height, string currPath, int rowInd, int colInd)
     } else
         curr->west = nullptr;
 
-    curr->path  = currPath;     // set path to currPath
+    // Set path to current path
+    curr->path  = currPath;
     return curr;
 }
 
-// function autoSolve
-// parameters: the target
-// does: calls private function autoSolve (attempts to find solution to game)
+/*
+ * autoSolve (public)
+ *
+ * Parameters: Target
+ * Returns:    True if game is solveable in < 7 moves, otherwise false
+ * Does:       Calls private helper autoSolve, which attempts to find solution
+ *             to game
+ */
 bool Tree::autoSolve(char target)
 {
     return autoSolve(target, root);
 }
 
-// function autoSolve
-// parameters: target, starting Node (the root of tree)
-// does: searches for a solution to the game by searching the tree to find
-//       the target
+/*
+ * autoSolve (private)
+ *
+ * Parameters: Target, poitner to starting Node (tree root)
+ * Returns:    True if game is solveable, otherwise false
+ * Does:       Searches for solution by searching tree to find target
+ */
 bool Tree::autoSolve(char target, Node *curr)
 {
-    bool isNorth = false, isEast = false, isSouth = false, isWest = false;
+    bool isNorth = false,
+         isEast  = false,
+         isSouth = false,
+         isWest  = false;
 
-    if (curr == nullptr)    // if find nullptr, return
+    // If reached nullptr, return
+    if (curr == nullptr)
         return false;
 
-    if (curr->boardChar == target) {    // if find target, you win!
+    // If target found, you win!
+    if (curr->boardChar == target) {
         cout << curr->path << "Found the target!" << endl;
         return true;
     }
 
-    // searches tree depending on if robot can move in each direction
+    // Searches tree if robot can move in respective direction
     if (myBoard.canMoveNorth(curr->row, curr->col))
         isNorth = autoSolve(target, curr->north);
         if (isNorth)
@@ -140,39 +173,52 @@ bool Tree::autoSolve(char target, Node *curr)
     return false;
 }
 
-
-// function copy
-// parameters: a Node
-// does: copies the tree
+/*
+ * copy
+ *
+ * Parameters: a Node
+ * Returns:    Pointer to root of copied tree
+ * Does:       Copies tree
+ */
 Tree::Node *Tree::copy(Node *toCopy) {
-        if (toCopy == nullptr)
+    if (toCopy == nullptr)
             return nullptr;
 
-        Node *curr = new Node;
+    Node *curr = new Node;
 
-        curr->path   = toCopy->path;    // copy data from original node
+    // Copies data from original node
+    curr->path   = toCopy->path;
 
-        curr->north   = copy(toCopy->north);    // deep copies children
-        curr->east = copy(toCopy->east);
-        curr->south = copy(toCopy->south);
-        curr->west = copy(toCopy->west);
-        return curr;
+    // Deep copies children
+    curr->north   = copy(toCopy->north);
+    curr->east = copy(toCopy->east);
+    curr->south = copy(toCopy->south);
+    curr->west = copy(toCopy->west);
+
+    return curr;
 }
 
-// copy constructor
+/*
+ * Copy Constructor
+ */
 Tree::Tree(const Tree &oldTree)
 {
     root = copy(oldTree.root);
 }
 
-// assignment operator
+/*
+ * Assignment Operator
+ */
 Tree &Tree::operator=(const Tree &toCopy){
-        if (this == &toCopy)    // check for self assignment
-                return *this;
-
-        destroy(root);  // deletes dynamic memory in current obj
-        
-        root = copy(toCopy.root);   // deep copies
-
+    // Checks for self-assignment    
+    if (this == &toCopy)    // check for self assignment
         return *this;
+
+    // Deletes dynamic memory in current object
+    destroy(root);
+        
+    // Performs deep copy
+    root = copy(toCopy.root);
+
+    return *this;
 }
