@@ -1,13 +1,14 @@
-/********************************************
-* Comp 15 - Fall 2019
-* Project 1
-* ELIZABETH HOM
-* 23 OCT 2019
-* 
-* Board.cpp
-*
-* Board implementation
-*********************************************/
+/*
+ * Board.cpp
+ * 
+ * COMP15 - FALL2019
+ * Elizabeth Hom (ehom01)
+ * Last Modified: October 23, 2019
+ * 
+ * Purpose: Implementation of the Board class. Oversees game board, its
+ *          elements, and relevant functions, including moving robot,
+ *          printing board, checking win conditions
+ */
 
 #include <iostream>
 #include <fstream>
@@ -16,26 +17,30 @@
 
 using namespace std;
 
-// constructor
-// parameters: none
-// does: none
+/*
+ * Constructor
+ */
 Board::Board()
 {
-
+    
 }
 
-// destructor
-// parameters: none
-// does: none
+/*
+ * Destructor
+ */
 Board::~Board()
 {
 
 }
 
-// function placeRobot
-// parameters: robot's symbol and user-inputted starting row, col
-// does: sets robot's symbol, row, and col based on  user-input in main. then
-//       places robot symbol in the specified row, col in the board array
+/*
+ * placeRobot
+ *
+ * Parameters: Robot's user-inputted symbol, starting row, starting col
+ * Returns:    NA
+ * Does:       Sets robot's symbol, row, col. Places robot symbol in specified
+ *             coordinates in board
+ */
 void Board::placeRobot(char symbol, int row, int col)
 {
     myRobot.symbol = symbol;
@@ -47,15 +52,18 @@ void Board::placeRobot(char symbol, int row, int col)
     myBoard[myRobot.indexRow][myRobot.indexCol] = symbol;
 }
 
-// function fillBoard
-// parameters: board filename
-// does: reads in the board from the filename provided on the command line
-//       and saves the file's board characters into the 2d board array
+/*
+ * fillBoard
+ *
+ * Parameters: Board file name
+ * Returns:    NA
+ * Does:       Reads and populates board from file
+ */
 void Board::fillBoard(string filename)
 {
     char cell;
-
     ifstream input;
+    
     input.open(filename);
 
     for(int tempRow = 0; tempRow < 15; tempRow++) {
@@ -68,9 +76,13 @@ void Board::fillBoard(string filename)
     input.close();
 }
 
-// function printBoard
-// parameters: none
-// does: prints the current state of the game board
+/*
+ * printBoard
+ *
+ * Parameters: NA
+ * Returns:    NA
+ * Does:       Prints current state of game board
+ */
 void Board::printBoard()
 {
     cout << endl;
@@ -86,22 +98,27 @@ void Board::printBoard()
     cout << endl;
 }
 
-// function moveEast
-// parameters: none
-// does: moves the robot as far East as possible (until it hits a wall or
-//       the edge). then, prints resulting board to the terminal as well as a
-//       winning message if the user has won (lands on the target).
+/*
+ * moveEast
+ *
+ * Parameters: NA
+ * Returns:    NA
+ * Does:       Moves robot as far East as possible (until hits wall or edge).
+ *             Prints resulting game board to terminal and winning message, if
+ *             applicable.
+ */
 void Board::moveEast()
 {   
-    // gets new col of robot moving as far east as possible
+    // Gets new col of robot moving as far East as possible
     int newCol = mvEGetPos(myRobot.indexRow, myRobot.indexCol);
     if (myBoard[myRobot.indexRow][newCol] == '*')
-        youWin = true;   // if find *, winning condition met
+        youWin = true;
 
-    myBoard[myRobot.indexRow][myRobot.indexCol] = 'X';   // swap board
-    myBoard[myRobot.indexRow][newCol] = myRobot.symbol;  // characters
+    // Swap board characters
+    myBoard[myRobot.indexRow][myRobot.indexCol] = 'X';
+    myBoard[myRobot.indexRow][newCol] = myRobot.symbol;
 
-    myRobot.indexCol = newCol;          // update robot col index and col #
+    myRobot.indexCol = newCol;
     myRobot.col = (newCol + 2) / 2;
 
     if (youWin == false)
@@ -112,11 +129,15 @@ void Board::moveEast()
     }
 }
 
-// function moveWest
-// parameters: none
-// does: moves the robot as far West as possible (until it hits a wall or
-//       the edge). then, prints resulting board to the terminal as well as a
-//       winning message if the user has won (lands on the target).
+/*
+ * moveWest
+ *
+ * Parameters: NA
+ * Returns:    NA
+ * Does:       Moves robot as far West as possible (until hits wall or edge).
+ *             Prints resulting game board to terminal and winning message, if
+ *             applicable.
+ */
 void Board::moveWest()
 {
     int newCol = mvWGetPos(myRobot.indexRow, myRobot.indexCol);
@@ -136,11 +157,15 @@ void Board::moveWest()
     }
 }
 
-// function moveSouth
-// parameters: none
-// does: moves the robot as far South as possible (until it hits a wall or
-//       the edge). then, prints resulting board to the terminal as well as a
-//       winning message if the user has won (lands on the target).
+/*
+ * moveSouth
+ *
+ * Parameters: NA
+ * Returns:    NA
+ * Does:       Moves robot as far South as possible (until hits wall or edge).
+ *             Prints resulting game board to terminal and winning message, if
+ *             applicable.
+ */
 void Board::moveSouth()
 {
     int newRow = mvSGetPos(myRobot.indexRow, myRobot.indexCol);
@@ -160,11 +185,15 @@ void Board::moveSouth()
     }
 }
 
-// function moveNorth
-// parameters: none
-// does: moves the robot as far North as possible (until it hits a wall or
-//       the edge). then, prints resulting board to the terminal as well as a
-//       winning message if the user has won (lands on the target).
+/*
+ * moveNorth
+ *
+ * Parameters: NA
+ * Returns:    NA
+ * Does:       Moves robot as far North as possible (until hits wall or edge).
+ *             Prints resulting game board to terminal and winning message, if
+ *             applicable.
+ */
 void Board::moveNorth()
 {
     int newRow = mvNGetPos(myRobot.indexRow, myRobot.indexCol);
@@ -184,12 +213,13 @@ void Board::moveNorth()
     }
 }
 
-// function youWin
-// parameters: none
-// returns: returns true if the user has won, false if the user still has yet
-//          to win
-// does: checks if the user has won (robot lands on the target), returns true
-//       or false accordingly.
+/*
+ * youWin
+ *
+ * Parameters: NA
+ * Returns:    True if user has met winning conditions, otherwise false
+ * Does:       Checks and returns true if user has won (robot lands on target)
+ */
 bool Board::getYouWin()
 {
     if (youWin == true)
@@ -198,12 +228,14 @@ bool Board::getYouWin()
         return false;
 }
 
-// function canMoveNorth
-// parameters: row and col index of robot
-// returns: true if the robot, at its current position, can move north at all.
-//          returns false if robot cannot move north (against a '- wall or
-//          board north edge)
-// does: checks if the robot can move north
+/*
+ * canMoveNorth
+ *
+ * Parameters: Robot's row and col indices
+ * Returns:    True if robot, at its current position, can move North. Otherwise,
+ *             false
+ * Does:       Checks whether robot can move North
+ */
 bool Board::canMoveNorth(int rowIndex, int colIndex) // parameters are robot index
 {
     if (myBoard[rowIndex - 1][colIndex] == '-' or rowIndex == 0)
@@ -212,12 +244,14 @@ bool Board::canMoveNorth(int rowIndex, int colIndex) // parameters are robot ind
         return true;
 }
 
-// function canMoveEast
-// parameters: row and col index of robot
-// returns: true if the robot, at its current position, can move east at all.
-//          returns false if robot cannot move east (against a '|' wall or
-//          board east edge)
-// does: checks if the robot can move east
+/*
+ * canMoveEast
+ *
+ * Parameters: Robot's row and col indices
+ * Returns:    True if robot, at its current position, can move East. Otherwise,
+ *             false
+ * Does:       Checks whether robot can move East
+ */
 bool Board::canMoveEast(int rowIndex, int colIndex)
 {
     if (myBoard[rowIndex][colIndex + 1] == '|' or colIndex == 14)
@@ -227,12 +261,14 @@ bool Board::canMoveEast(int rowIndex, int colIndex)
 }
 
 
-// function canMoveSouth
-// parameters: row and col index of robot
-// returns: true if the robot, at its current position, can move south at all.
-//          returns false if robot cannot move south (against a '-' wall or
-//          board south edge)
-// does: checks if the robot can move south
+/*
+ * canMoveSouth
+ *
+ * Parameters: Robot's row and col indices
+ * Returns:    True if robot, at its current position, can move South. Otherwise,
+ *             false
+ * Does:       Checks whether robot can move South
+ */
 bool Board::canMoveSouth(int rowIndex, int colIndex)
 {
     if (myBoard[rowIndex + 1][colIndex] == '-' or rowIndex == 14)
@@ -241,12 +277,14 @@ bool Board::canMoveSouth(int rowIndex, int colIndex)
         return true;
 }
 
-// function canMoveWest
-// parameters: row and col index of robot
-// returns: true if the robot, at its current position, can move west at all.
-//          returns false if robot cannot move west (against a '|' wall or
-//          board west edge)
-// does: checks if the robot can move west
+/*
+ * canMoveWest
+ *
+ * Parameters: Robot's row and col indices
+ * Returns:    True if robot, at its current position, can move West. Otherwise,
+ *             false
+ * Does:       Checks whether robot can move West
+ */
 bool Board::canMoveWest(int rowIndex, int colIndex)
 {
     if (myBoard[rowIndex][colIndex - 1] == '|' or colIndex == 0)
@@ -255,13 +293,14 @@ bool Board::canMoveWest(int rowIndex, int colIndex)
         return true;
 }
 
-// function mvEGetpos
-// parameters: row and col index of robot
-// returns: the new col of the robot had it moved as far east as possible
-//          from the row and col position of the robot passed in
-// does: if the robot moves east, the row stays the same, but the robot will
-//       get a new column. returns the value of the new column had the robot
-//       moved as far east as possible
+/*
+ * mvEGetPos
+ *
+ * Parameters: Robot's row and col indices
+ * Returns:    New col of robot
+ * Does:       Returns the new column value had the robot moved as far East as
+ *             possible from the passed in row and column indices
+ */
 int Board::mvEGetPos(int rowIndex, int colIndex)
 {
    int tempCol = colIndex;
@@ -276,13 +315,14 @@ int Board::mvEGetPos(int rowIndex, int colIndex)
    return colIndex;
 }
 
-// function mvSGetpos
-// parameters: row and col index of robot
-// returns: the new row of the robot had it moved as far south as possible
-//          from the row and col position of the robot passed in
-// does: if the robot moves south, the col stays the same, but the robot will
-//       get a new row. returns the value of the new row had the robot
-//       moved as far south as possible
+/*
+ * mvSGetPos
+ *
+ * Parameters: Robot's row and col indices
+ * Returns:    New col of robot
+ * Does:       Returns the new column value had the robot moved as far South as
+ *             possible from the passed in row and column indices
+ */
 int Board::mvSGetPos(int rowIndex, int colIndex)
 {
     int tempRow = rowIndex;
@@ -297,13 +337,14 @@ int Board::mvSGetPos(int rowIndex, int colIndex)
     return rowIndex;
 }
 
-// function mvWGetpos
-// parameters: row and col index of robot
-// returns: the new col of the robot had it moved as far west as possible
-//          from the row and col position of the robot passed in
-// does: if the robot moves west, the row stays the same, but the robot will
-//       get a new column. returns the value of the new column had the robot
-//       moved as far west as possible
+/*
+ * mvWGetPos
+ *
+ * Parameters: Robot's row and col indices
+ * Returns:    New col of robot
+ * Does:       Returns the new column value had the robot moved as far West as
+ *             possible from the passed in row and column indices
+ */
 int Board::mvWGetPos(int rowIndex, int colIndex)
 {
     int tempCol = colIndex;
@@ -318,13 +359,14 @@ int Board::mvWGetPos(int rowIndex, int colIndex)
     return colIndex;
 }
 
-// function mvSGetpos
-// parameters: row and col index of robot
-// returns: the new row of the robot had it moved as far north as possible
-//          from the row and col position of the robot passed in
-// does: if the robot moves north, the col stays the same, but the robot will
-//       get a new row. returns the value of the new row had the robot
-//       moved as far north as possible
+/*
+ * mvNGetPos
+ *
+ * Parameters: Robot's row and col indices
+ * Returns:    New col of robot
+ * Does:       Returns the new column value had the robot moved as far North as
+ *             possible from the passed in row and column indices
+ */
 int Board::mvNGetPos(int rowIndex, int colIndex)
 {
     int tempRow = rowIndex;
@@ -339,19 +381,23 @@ int Board::mvNGetPos(int rowIndex, int colIndex)
     return rowIndex;
 }
 
-// function getRobotRowInd
-// parameters: none
-// returns: the current row position of the robot
-// does: returns the current row of the robot
+/*
+ * getRobotRowInd
+ *
+ * Parameters: NA
+ * Does:       Returns current row of robot
+ */
 int Board::getRobotRowInd()
 {
     return myRobot.indexRow;
 }
 
-// function getRobotColInd
-// parameters: none
-// returns: the current col position of the robot
-// does: returns the current col of the robot
+/*
+ * getRobotColInd
+ *
+ * Parameters: NA
+ * Does:       Returns current col of robot
+ */
 int Board::getRobotColInd()
 {
     return myRobot.indexCol;
@@ -361,6 +407,13 @@ int Board::getRobotColInd()
 // parameters: row and col index
 // returns: the board character at the specified row and col index
 // does: returns the character in the board at the passed in row and col index
+
+/*
+ * getBoardChar
+ *
+ * Parameters: Row and col indices
+ * Does:       Returns board character at specified row and col indices
+ */
 char Board::getBoardChar(int rowInd, int colInd)
 {
     return myBoard[rowInd][colInd];
