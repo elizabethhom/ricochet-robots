@@ -1,5 +1,5 @@
 # ricochet-robots
-A text-based game where a robot must navigate through a maze by ricocheting off walls in search of the target. *ricochet-robots* can be played in interactive (user controlled) or automatic mode, where the program automatically searches for a solution to the puzzle by using a tree that models all possible paths of the robot's movement from its starting position.
+A text-based game where a robot must navigate through a maze by ricocheting off walls in search of the target. *ricochet-robots* can be played in interactive (user controlled) or automatic mode, where the program automatically searches for a solution to the puzzle by using a tree that models all possible paths of the robot's movement from its starting position. Written as a midterm project for Tufts University's Data Structures Course in Fall 2019.
 
 ### Compile & Run
 * Compile program using "make"
