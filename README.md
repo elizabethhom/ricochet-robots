@@ -21,6 +21,3 @@ The program uses two classes: Board and Tree. Board uses a two-dimensional 15x15
 * Tree.cpp: Implementation of Tree class. Oversees building of tree that models all possible paths of robot from its starting position, and searching tree for a solution.
 * Tree.h: Interface of Tree class.
 * Makefile: Contains code that builds the program.
-
-### Game Play Example: Interactive & Automatic Mode
-![Example game play for interactive and automatic mode](example-game-play.jpg)
